@@ -1,5 +1,32 @@
 FROM    ubuntu
 
+RUN echo "deb http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu trusty main" > /etc/apt/sources.list.d/deadsnakes.list \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys DB82666C
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    build-essential \
+    ca-certificates \
+    gcc \
+    git \
+    libpq-dev \
+    make \
+    mercurial \
+    pkg-config \
+    python3.4 \
+    python3.4-dev \
+    ssh \
+    && apt-get autoremove \
+    && apt-get clean
+
+ADD https://raw.githubusercontent.com/pypa/pip/701a80f451a62aadf4eeb21f371b45424821582b/contrib/get-pip.py /root/get-pip.py
+RUN python3.4 /root/get-pip.py
+RUN pip3.4 install -U "setuptools==15.1"
+RUN pip3.4 install -U "pip==6.1.1"
+RUN pip3.4 install -U "virtualenv==12.1.1"
+
+
 RUN     cd /tmp \
 &&      apt-get update \
 &&      apt-get install -y wget \
@@ -29,28 +56,6 @@ RUN apt-get update && \
     apt-get autoremove -y --purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN sed -i 's/archive.ubuntu.com/mirrors.200p-sf.sonic.net/' /etc/apt/sources.list \
-    && sed -i 's/deb-src/#deb-src/' /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y \
-    build-essential \
-    ca-certificates \
-    gcc \
-    git \
-    libpq-dev \
-    make \
-    pkg-config \
-    python3.4 \
-    python3.4-dev \
-    && apt-get autoremove -y \
-    && apt-get clean
-    
-ADD https://bootstrap.pypa.io/get-pip.py /tmp/
-RUN ln -s /usr/bin/python3.4 /usr/bin/python3 && python3 /tmp/get-pip.py && rm /tmp/get-pip.py
-
-RUN pip3 install -U virtualenv
 
 RUN apt-get update --fix-missing \
     && apt-get install -y wget g++ make \
