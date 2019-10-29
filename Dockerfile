@@ -1,15 +1,4 @@
-FROM    python:3.5-alpine
-
-RUN     cd /tmp \
-&&      apt-get update \
-&&      apt-get install -y wget \
-&&      wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.9.0/ncbi-blast-2.9.0+-x64-linux.tar.gz \
-&&      tar xf ncbi-blast-2.9.0+-x64-linux.tar.gz \
-&&      cp -r ncbi-blast-2.9.0+/bin/* /usr/local/bin/ \
-&&      cd / \
-&&      apt-get autoremove -y wget \
-&&      rm -rf /tmp/* \
-&&      rm -rf /var/lib/apt/lists/*
+FROM arcanabio/python:3.7
 
 RUN apt-get update && \
     apt-get install -y git build-essential make cmake vim-common libgomp1 gawk && \
